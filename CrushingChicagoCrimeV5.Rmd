@@ -1,0 +1,288 @@
+---
+
+title: "Milestone 2 Project Report"
+
+authors: "Gary Warren and Kyle Maloney"
+
+date: "October 13, 2017"
+
+output:
+  html_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+##Introduction
+
+Because of the crime rates in Chicago , it has become necessary to increase focus into specific areas due to not only the high volume of crimes but the types of crimes in those areas that go unnoticed. In a world where poverty stricken areas need monitoring, more monitoring service companies have taken to subcontracting their services to Police stations around the US. With competition getting more numerous it is now coming down to which company can do the same job at a cheaper rate. With the growing technology and large amounts of data, companies like this can now use existing data to predict where and when crimes may happen depending on analysis of data. That is what we plan to do with in this project.
+  
+Using preexisting data like  location and and crime Descriptions to monitor, we also will be using the times and dates to cut labor and storage costs in labor monitoring and lower costs of storage needed to keep data until  needed.
+	
+* Questions to be answered,
+
+
+
+    1) How will we determine which areas should be monitored over others based on their crime rate.
+    
+        i) Number of crimes and time crimes occurred.
+      
+    2) What times are these crimes happening in order to determine when to monitor these areas?
+    
+        i) Parse Date column to get the times. 
+      
+    3) How will we determine the severity of crimes in order to determine area to be monitored?
+    
+    4) Can we use predictive analysis and machine learning techniques on specific attributes like location or  type of crime  in determining future high risk areas to monitor.
+
+
+cleanse enviroment
+```{r}
+rm(list=ls())
+
+library("XML")
+library("RCurl")
+library("magrittr")
+#library("stringr")
+library("tidyr")
+#library("jsonlite")
+#library("rjson")
+#library("bindr")
+#library("sqldf")
+library("ggplot2")
+#library("plyr")
+library("dplyr")
+#library("data.table")
+```
+#### Data Source and Collection
+
+The data we are collecting and using to build our model was collected from Kaggle .The dataset includes over 20 column attributes that describe each crime like location in an xy coordinate, building structure, address, the date and time the crime occurred , whether there was an arrest or not, the type of crime, and which precinct and ward handled the case. Most relevant to our proposal will be the time, type, and location. The dataset contains over 6 million(6,000,000) records. The data comes from The Chicago Police Department's CLEAR(Citizen Law Enforcement Analysis and Reporting) system and does not include the addresses, to protect the crime victims it has narrowed down to the block.  The dataset is a 489 MB zip file and is publicly available for download on Kaggles site at this link:[link](https://www.kaggle.com/currie32/crimes-in-chicago/data)
+
+
+
+```{r}
+df <- read.csv("Chicago_Crimes_2012_to_2017.csv") #put data in dataframe
+```
+```{r}
+#Only put in the relevant columns into the dataframe
+crime_df <- df %>% select(ID,Date,Block,Primary.Type,Location.Description)
+Time <-crime_df$Date %>% 
+  gsub("\\d+/\\d+/\\d+/* ", " ", .)
+crime_df <- cbind(Time, crime_df)
+colnames(crime_df) <-c("Time", "ID","Date","Block","Type","Description")
+
+```
+
+
+####Cleanse and Transform Data
+
+In order to translate the millions of given data from Chicago City Police Department into useable data for our project we needed to learn some statistics first.  These statistics tell us  a little story like what are the most committed crimes , the statistic summary we received from the "Chicago_Crimes_2012_to_2017.csv"  data shows  us that Theft, Narcotics, Battery, Criminal Damage, and Assault were  the  most committed crimes in  Chicago between the years of 2012 and 2017 we also see that the times that most of these crimes happened is between 9AM and 5PM. In addition to this we see that these crimes were happening on specific streets, the top 4 streets to mention are State St. (on different blocks), Michigan St. , Cicero St. , and Terminal St. . One of the most important to our project is the places these crimes were happening , on the Street, Sidewalks , Parking lots  , Apartments , and Residence.
+
+
+## Read data into useful variables so we can get information that applies to our business need.
+
+The next thing  question we needed answered is , on what streets were these more important "outside"  crimes happening ( we are not likely to waste labor money on people spitting on the street, or disturbing the peace )? In order to do this we had to dig a little deeper into our data. We did this by pulling out all the data of these specific streets that met specific criteria for monitoring, such as , did these streets have theft , assault , criminal damage, or narcotic traffic happening outside in those areas where crimes were happening the most? To do this we filtered only that criteria out of our database with a list we call "important_places" that includes all those areas we found of interest in our summary like "sidewalk, street, parking lots, etc."  and a few others that may fall into our criteria that were not caught in the summary. With this done we can now see all those streets that meet this criteria but what we discover is they fell out of the time range we first seen in our initial summary so the next step was to take this new data frame and extract from it  two (2) different graphs that will tell us a story that we want to hear. At what times are the most horrendous crimes happening? 
+
+##Initial Crime Summary
+
+The initial summary below tells  us a little story , mostly that these crimes were happening mostly on 4 different streets that these crimes were happening at specific hours and inside apartments and around residences, but the ones we are concerned with are the ones  outside on the streets , parking lots, and sidewalks where our cameras could be mounted and monitored for this crime traffic. 
+```{r}
+summary(crime_df)
+```
+
+```{r}
+#A subset of the places that we care to pay attention to
+important_places <- c("STREET","SIDEWALK","PARKING LOT/GARAGE(NON.RESID.)","SCHOOL,PUBLIC,GROUNDS","COLLEGE/UNIVERSITY GROUNDS","VEHICLE NON-COMMERCIAL","ATM(AUTOMATIC TELLER MACHINE)","PARK PROPERTY","RESIDENTIAL YARD (FRONT/BACK)","ALLEY","RESIDENCE PORCH/HALLWAY","HIGHWAY/EXPRESSWAY","VACANT LOT/LAND","CONVENIENCE STORE","CTA BUS","SMALL RETAIL STORE","CTA STATION")
+
+# use filter with dplyr
+newestCrime_df<-dplyr::filter(crime_df, Description %in% important_places)
+str(newestCrime_df)
+
+```
+## Summary of our crime data to find most important aspects
+
+Our new data told us another story when we look at its summary, because of  this new criteria of wanting to monitor outside crimes only , our streets have changed but only by one or two , the most active are still Michigan and State St. but we now have to get some visual data in graph  using ggplot on those streets to see what crimes are happening the most and determine which of these streets still had the highest crime rate and if these crimes happening outside were interesting to our project.
+
+Seen by our new summary below  was that these "street" crimes were happening at night between the hours of 5PM and 10PM . So now we need to visualize this data in a plot graph using ggplot2 that allows us to see the amount of crimes happening at what times , we did this for each street aforementioned.
+
+
+```{r}
+summary(newestCrime_df)
+```
+##Properly detect outliers and deal with missing values in your dataset.
+The next step was to take this new data frame and extract from it  two (2) different sets of graphs, the first set of four will tell us what the number of each crimes are on each street and on the other set of four what times are the most horrendous crimes happening? 
+
+
+
+With these visual data spread out over 24 hrs in 48 different time plots we have a more complete story that shows most of  these theft and assault crimes on Madison St. are happening  between 8PM-12AM where before  the outlier being narcotics between the times of 2:40PM-6:00PM  would have proven to be wrong if left with initial summary of just 24 time plots that showed ; On State St. during the day between 2:30PM-7PM with outlier being theft , and on Michigan St. they are happening at two intervals , 2:50PM-5PM and  9PM-1AM with its outlier being theft outside of both of these ranges with 24 time plots.
+
+```{r}
+
+#order the data by block, time and type 
+newData <-NULL
+newData <- newestCrime_df[order(newestCrime_df$Block, newestCrime_df$Type, newestCrime_df$Time), ]
+
+#head(newData)
+
+#This is used to take only the most common times at which crime occur for a specific block that is decided using a string literal
+#singleBlockData <- subset(newData, newData$Block == "042XX W MADISON ST", select=c(Time))
+
+#This is the same one as above but is used to get the most common crimes and types of cimes
+singleBlockData <- subset(newData, newData$Block == "042XX W MADISON ST", select=c(Type))
+singleBlockDataV2 <- subset(newData, newData$Block == "008XX N MICHIGAN AVE", select=c(Type))
+singleBlockDataV3 <- subset(newData, newData$Block == "001XX N STATE ST", select=c(Type))
+singleBlockDataV4 <- subset(newData, newData$Block == "040XX W MADISON ST", select=c(Type))
+
+
+#use some fancy stuff to create this  sorted dataframe for crimes
+plotdata<- singleBlockData %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+plotdataV2<- singleBlockDataV2 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+plotdataV3<- singleBlockDataV3 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+plotdataV4<- singleBlockDataV4 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+
+
+
+#this renames the columns in our sorted dataframe
+plotdata <- cbind(rownames(plotdata), plotdata)
+rownames(plotdata) <- NULL
+colnames(plotdata) <- c("index", "crimeType","Freq")
+
+plotdataV2 <- cbind(rownames(plotdataV2), plotdataV2)
+rownames(plotdataV2) <- NULL
+colnames(plotdataV2) <- c("index", "crimeType","Freq")
+
+plotdataV3 <- cbind(rownames(plotdataV3), plotdataV3)
+rownames(plotdataV3) <- NULL
+colnames(plotdataV3) <- c("index", "crimeType","Freq")
+
+plotdataV4 <- cbind(rownames(plotdataV4), plotdataV4)
+rownames(plotdataV4) <- NULL
+colnames(plotdataV4) <- c("index", "crimeType","Freq")
+
+
+
+#This just takes the first 10 most common data crime elements and their frequency
+blockData <- plotdata$crimeType[1:10]
+blockDataFrequency <- plotdata$Freq[1:10]
+
+blockDataV2 <- plotdataV2$crimeType[1:10]
+blockDataFrequencyV2 <- plotdataV2$Freq[1:10]
+
+blockDataV3 <- plotdataV3$crimeType[1:10]
+blockDataFrequencyV3 <- plotdataV3$Freq[1:10]
+
+blockDataV4 <- plotdataV4$crimeType[1:10]
+blockDataFrequencyV4 <- plotdataV4$Freq[1:10]
+
+
+#this plots a dot graph
+MadisonSt1Data <- NULL
+MadisonSt1Data <- rbind(MadisonSt1Data, data.frame(blockData, blockDataFrequency ))
+w<-ggplot(MadisonSt1Data,aes(x = blockData, y = blockDataFrequency )) + geom_point(color='blue') + theme(axis.text.x = element_text(angle = 90, hjust = 1))#theme sets the x axis vert(90)
+w + labs(x = "Crime Types") + labs(y ="Crime Frequency")+ labs(title = "4000 Madison St.- Type Plot")
+
+MichiganStDataV2 <- NULL
+MichiganStDataV2 <- rbind(MichiganStDataV2, data.frame(blockDataV2, blockDataFrequencyV2 ))
+v<-ggplot(MichiganStDataV2,aes(x = blockDataV2, y = blockDataFrequencyV2 )) + geom_point(color='red') +theme(axis.text.x = element_text(angle = 90, hjust = 1))
+v  + labs(x = "Crime Types") + labs(y ="Crime Frequency") + labs(title = "Michigan St.- Type Plot")
+StateStDataV3 <- NULL
+StateStDataV3 <- rbind(StateStDataV3, data.frame(blockDataV3, blockDataFrequencyV3 ))
+u<-ggplot(StateStDataV3,aes(x = blockDataV3, y = blockDataFrequencyV3 )) + geom_point(color='purple') + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+u  + labs(x = "Crime Types") + labs(y ="Crime Frequency") + labs(title = "State St.- Types plot")
+
+MadisonSt2DataV4 <- NULL
+MadisonSt2DataV4 <- rbind(MadisonSt2DataV4, data.frame(blockDataV4, blockDataFrequencyV4 ))
+t<-ggplot(MadisonSt2DataV4,aes(x = blockDataV4, y = blockDataFrequencyV4 )) + geom_point(color='green') + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+t + labs(x = "Crime Types") + labs(y ="Crime Frequency")+ labs(title = "4200 Madison St.- Type Plot")
+
+
+```
+```{r}
+#This is the same one as above but is used to get the most common crimes and times of cimes
+singleBlockDataV5 <- subset(newData, newData$Block == "042XX W MADISON ST", select=c(Time))
+singleBlockDataV6 <- subset(newData, newData$Block == "008XX N MICHIGAN AVE", select=c(Time))
+singleBlockDataV7 <- subset(newData, newData$Block == "001XX N STATE ST", select=c(Time))
+singleBlockDataV8 <- subset(newData, newData$Block == "040XX W MADISON ST", select=c(Time))
+
+#use some fancy stuff to create this  sorted dataframe for times
+plotdataV5<- singleBlockDataV5 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+plotdataV6<- singleBlockDataV6 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+plotdataV7<- singleBlockDataV7 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+plotdataV8<- singleBlockDataV8 %>% table %>% sort(.,decreasing = TRUE)%>% data.frame
+
+#This line is only necessary for when you are graphing the times
+plotdataV5$singleBlockDataV5 <- format(plotdataV5$singleBlockDataV5, format = "%H:%M:%S")
+
+
+#this renames the columns in our sorted dataframe ffor times
+plotdataV5 <- cbind(rownames(plotdataV5), plotdataV5)
+rownames(plotdataV5) <- NULL
+colnames(plotdataV5) <- c("Time","Freq")
+
+plotdataV6 <- cbind(rownames(plotdataV6), plotdataV6)
+rownames(plotdataV6) <- NULL
+colnames(plotdataV6) <- c("Time","Freq")
+
+plotdataV7 <- cbind(rownames(plotdataV7), plotdataV7)
+rownames(plotdataV7) <- NULL
+colnames(plotdataV7) <- c("Time","Freq")
+
+plotdataV8 <- cbind(rownames(plotdataV8), plotdataV8)
+rownames(plotdataV8) <- NULL
+colnames(plotdataV8) <- c("Time","Freq")
+
+
+#This just takes the first 10 most common data time elements and their frequency
+blockDataV5 <- plotdataV5$Time[1:40]
+blockDataFrequencyV5 <- plotdataV5$Freq[1:40]
+
+blockDataV6 <- plotdataV6$Time[1:40]
+blockDataFrequencyV6 <- plotdataV6$Freq[1:40]
+
+blockDataV7 <- plotdataV7$Time[1:40]
+blockDataFrequencyV7 <- plotdataV7$Freq[1:40]
+
+blockDataV8 <- plotdataV8$Time[1:40]
+blockDataFrequencyV8 <- plotdataV8$Freq[1:40]
+
+#this plots a dot graph of time
+finalPlotDataV5<- NULL
+#finalPlotData<- par(mar=c(11,4,4,2)) # the 10 allows the names.arg below the barplot
+finalPlotDataV5 <- rbind(finalPlotDataV5, data.frame(blockDataV5, blockDataFrequencyV5 ))
+s<-ggplot(finalPlotDataV5,aes(x = blockDataV5, y = blockDataFrequencyV5 , color = blockDataFrequencyV5 )) + geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1))#theme sets the x axis vert(90)
+s + labs(x = " Crime Frequency") + labs(y ="Crime Times")+ labs(title = "4000 Madison St.- Time Plot")
+
+finalPlotDataV6 <- NULL
+finalPlotDataV6 <- rbind(finalPlotDataV6, data.frame(blockDataV6, blockDataFrequencyV6))
+r<-ggplot(finalPlotDataV6,aes(x = blockDataV6, y = blockDataFrequencyV6, color = blockDataFrequencyV6  )) + geom_point()+theme(axis.text.x = element_text(angle = 90, hjust = 1))
+r + labs(x = " Crime Frequency") + labs(y ="Crime Times") + labs(title = "Michigan St.- Time Plot")
+finalPlotDataV7 <- NULL
+finalPlotDataV7 <- rbind(finalPlotDataV7, data.frame(blockDataV7, blockDataFrequencyV7 ))
+q<-ggplot(finalPlotDataV7,aes(x = blockDataV7, y = blockDataFrequencyV7, color = blockDataFrequencyV7 )) + geom_point() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+q + labs(x = " Crime Frequency") + labs(y ="Crime Times") + labs(title = "State St.- Time plot")
+finalPlotDataV8 <- NULL
+finalPlotDataV8 <- rbind(finalPlotDataV8, data.frame(blockDataV8, blockDataFrequencyV8 ))
+p<-ggplot(finalPlotDataV8,aes(x = blockDataV8, y = blockDataFrequencyV8 , color = blockDataFrequencyV8)) + geom_point()  + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+p + labs(x = "Crime Frequency") + labs(y ="Crime Times")  + labs(title = "4200 Madison St.- Time Plot")
+```
+
+
+
+
+```{r}
+#This just orders the data so we can look at the most common things
+# as.data.frame(sort(table(singleBlockData$Type), decreasing = TRUE))
+# as.data.frame(sort(table(singleBlockData$Time), decreasing = TRUE))
+# as.data.frame(sort(table(newData$Block), decreasing = TRUE))
+#newData$Block, 
+
+
+```
+##References:
+
+[1] Grainger, 2016. "Video Surveillance Storage Trends to Watch". URL: [link](http://www.securityinfowatch.com/article/12222063/video-surveillance-storage-trends-to-watch) . Date last accessed: 10/10/2017
+
+[2]  La Vigne, 2011. "Using Public Surveillance Systems for Crime Control and Prevention:". URL:[link](https://www.urban.org/sites/default/files/publication/27551/412402-Using-Public-Surveillance-Systems-for-Crime-Control-and-Prevention-A-Practical-Guide-for-Law-Enforcement-and-Their-Municipal-Partners.PDF) . Date last accessed: 09/03/2017
+
+
