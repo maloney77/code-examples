@@ -10,5 +10,7 @@ outputs whether they are inside eachother, not connected, touching, and so on.
 The two C++ programs are pretty simplistic but show how I code a bit. maxflowalgor is a program that implements the max flow algorithm
 finding the best flow through a single point in a graph more can be read about this here https://en.wikipedia.org/wiki/Maximum_flow_problem.
 
-The other C++ program is a pretty simplistic lexical analyzer from scratch. A user inputs a string and it looks to see if that string matches
-certain criteria and outputs what it is like an email, scientific notation number, a string, and others.
+The other C++ program is a pretty simplistic lexical analyzer from scratch. A user inputs a string and it looks to see if that string matches certain criteria and outputs what it is like an email, scientific notation number, a string, and others.
+
+The RMD file is an R file that has a data analysis project that a partner and I are currently working on. It uses current R methods and 
+data visualization to track where and when the most common crimes are happening in Chicago based on data we found on Kaggle.com.
