@@ -1,0 +1,40 @@
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe.config
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\bin\Debug\customerOrder2.pdb
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.MainForm.resources
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.Properties.Resources.resources
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csproj.GenerateResource.Cache
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.exe
+\\minerfiles.mst.edu\dfs\users\kemvy4\my documents\visual studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.pdb
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe.config
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.exe
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.pdb
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csprojResolveAssemblyReference.cache
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.MainForm.resources
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.Properties.Resources.resources
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csproj.GenerateResource.Cache
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe
+S:\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\bin\Debug\customerOrder2.pdb
+\\minerfiles.mst.edu\dfs\Users\kemvy4\My Documents\Visual Studio 2015\Projects\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csprojResolveAssemblyReference.cache
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe.config
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\obj\Debug\customerOrder2.exe
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\obj\Debug\customerOrder2.pdb
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\bin\Debug\customerOrder2.pdb
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csprojResolveAssemblyReference.cache
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\obj\Debug\customerOrder2.MainForm.resources
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\obj\Debug\customerOrder2.Properties.Resources.resources
+C:\Users\Owner\Downloads\Maloney_Kyle-12\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csproj.GenerateResource.Cache
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe.config
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\bin\Debug\customerOrder2.pdb
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csprojResolveAssemblyReference.cache
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.MainForm.resources
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.Properties.Resources.resources
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csproj.GenerateResource.Cache
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.csproj.CoreCompileInputs.cache
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.exe
+\\minerfiles.mst.edu\dfs\users\kemvy4\Downloads\Maloney_Kyle-15\customerOrder2\customerOrder2\obj\Debug\customerOrder2.pdb
+C:\Users\Owner\Documents\sendthese\customerOrder2\customerOrder2\bin\Debug\customerOrder2.exe.config
+C:\Users\Owner\Documents\sendthese\customerOrder2\customerOrder2\obj\Debug\customerOrder2.exe
+C:\Users\Owner\Documents\sendthese\customerOrder2\customerOrder2\obj\Debug\customerOrder2.pdb
